@@ -13,12 +13,20 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   _id: string;
   @Column()
-  name: string;
+  firstName: string;
+  @Column()
+  lastName: string;
+  @Column()
+  nickname: string;
   @Column({ unique: true })
   email: string;
   @Exclude()
   @Column()
   password: string;
+  @Column()
+  profession: string;
+  @Column({ length: 1000 })
+  skills: string;
   @CreateDateColumn()
   dateCreated: Date;
   @Column({ nullable: true })

@@ -9,6 +9,9 @@ import {
   Param,
   Patch,
   Post,
+  Put,
+  Req,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,11 +19,16 @@ import { UsersService } from 'src/users/users.service';
 import { UserDto, UserUpdateDto } from 'src/users/dto/users.dto';
 import * as bcrypt from 'bcrypt';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
+import { FileService } from 'src/file/file.service';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private fileService: FileService,
+  ) {}
 
   @Post('/')
   async create(@Body() body: UserDto) {
@@ -78,5 +86,33 @@ export class UsersController {
     return {
       message: 'success',
     };
+  }
+  @UseGuards(AuthGuard)
+  @Put('/upload/:id')
+  @UseInterceptors(FileInterceptor('file'))
+  async upload(@Req() request, @UploadedFile() file, @Param('id') id: number) {
+    try {
+      const { id: userId } = request.user;
+      if (userId !== id) {
+        return new BadRequestException('Bad request');
+      }
+
+      const user = await this.get(id);
+
+      if (!user) {
+        return new BadRequestException('Bad request');
+      }
+
+      const result = await this.fileService.save(file);
+      await this.userService.update(id, {
+        ...user,
+        avatar: result.url,
+      });
+      return {
+        message: 'success',
+      };
+    } catch (e) {
+      throw new BadRequestException('Bad request');
+    }
   }
 }

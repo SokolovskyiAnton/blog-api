@@ -7,15 +7,22 @@ export class UserDto {
   @IsNotEmpty()
   password: string;
   @IsNotEmpty()
-  name: string;
+  firstName: string;
+  @IsNotEmpty()
+  lastName: string;
 }
 
 export class UserUpdateDto {
   @IsOptional()
-  name: string;
+  @IsNotEmpty()
+  firstName: string;
   @IsOptional()
-  password: string;
+  @IsNotEmpty()
+  lastName: string;
   @IsOptional()
+  nickname: string;
   @IsOptional()
-  email: string;
+  skills: string;
+  @IsOptional()
+  profession: string;
 }
