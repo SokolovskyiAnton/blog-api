@@ -1,11 +1,14 @@
 import * as AWS from 'aws-sdk';
 import { BadRequestException, Injectable, UploadedFile } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
 @Injectable()
 export class FileService {
+  constructor(private configService: ConfigService) {}
   async save(@UploadedFile() file) {
     AWS.config.update({
-      accessKeyId: 'AKIASRYFAFUBVVHD6V4J',
-      secretAccessKey: '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',
+      accessKeyId: this.configService.get<string>('AWS_ACCESS_ID'),
+      secretAccessKey: this.configService.get<string>('AWS_SECRET_KEY'),
       region: 'us-east-1',
     });
 
