@@ -54,7 +54,7 @@ export class PostsController {
     const post = await this.findOne(id);
 
     if (!post) {
-      return new NotFoundException('Post not found');
+      throw new NotFoundException('Post not found');
     }
     await this.postsService.update(id, {
       ...post,

@@ -29,11 +29,11 @@ export class AuthController {
       where: { email: body.email },
     });
     if (!user) {
-      return new BadRequestException('Wrong credentials');
+      throw new BadRequestException('Wrong credentials');
     }
     const isPasswordsMatch = await bcrypt.compare(body.password, user.password);
     if (!isPasswordsMatch) {
-      return new BadRequestException('Invalid credentials');
+      throw new BadRequestException('Invalid credentials');
     }
     const jwt = await this.jwtService.signAsync({
       id: user._id,

@@ -67,7 +67,7 @@ export class UsersController {
     const user = await this.get(id);
 
     if (!user) {
-      return new BadRequestException('Bad request');
+      throw new BadRequestException('Bad request');
     }
 
     await this.userService.update(id, {
@@ -91,28 +91,24 @@ export class UsersController {
   @Put('/upload/:id')
   @UseInterceptors(FileInterceptor('file'))
   async upload(@Req() request, @UploadedFile() file, @Param('id') id: number) {
-    try {
-      const { id: userId } = request.user;
-      if (userId !== id) {
-        return new BadRequestException('Bad request');
-      }
-
-      const user = await this.get(id);
-
-      if (!user) {
-        return new BadRequestException('Bad request');
-      }
-
-      const result = await this.fileService.save(file);
-      await this.userService.update(id, {
-        ...user,
-        avatar: result.url,
-      });
-      return {
-        message: 'success',
-      };
-    } catch (e) {
+    const { id: userId } = request.user;
+    if (userId !== id) {
       throw new BadRequestException('Bad request');
     }
+
+    const user = await this.get(id);
+
+    if (!user) {
+      throw new BadRequestException('Bad request');
+    }
+
+    const result = await this.fileService.save(file);
+    await this.userService.update(id, {
+      ...user,
+      avatar: result.url,
+    });
+    return {
+      message: 'success',
+    };
   }
 }
