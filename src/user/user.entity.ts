@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -6,10 +7,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { Post } from 'src/posts/post.entity';
+import { PostEntity } from 'src/post/post.entity';
+import { hash } from 'bcrypt';
 
 @Entity('users')
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   _id: string;
   @Column()
@@ -31,6 +33,10 @@ export class User {
   dateCreated: Date;
   @Column({ nullable: true })
   avatar: string;
-  @OneToMany(() => Post, (post) => post.postedBy)
-  posts: Post[];
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hash(this.password, 12);
+  }
+  @OneToMany(() => PostEntity, (post) => post.postedBy)
+  posts: Array<PostEntity>;
 }

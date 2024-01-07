@@ -2,15 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MaxLength, MinLength } from 'class-validator';
-import { User } from 'src/users/users.entity';
+import { UserEntity } from 'src/user/user.entity';
 
 @Entity('posts')
-export class Post {
+export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
   _id: string;
   @Column()
@@ -25,6 +23,6 @@ export class Post {
   image: string;
   @Column('simple-array', { nullable: true })
   likes: string[];
-  @ManyToOne(() => User, (user) => user.posts)
-  postedBy: User;
+  @ManyToOne(() => UserEntity, (user) => user.posts)
+  postedBy: UserEntity;
 }
