@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostService } from 'src/post/post.service';
 
@@ -19,6 +20,8 @@ import { CreatePostDto } from 'src/post/dto/createPost.dto';
 import { UserEntity } from 'src/user/user.entity';
 import { UpdatePostDto } from 'src/post/dto/updatePost.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { PostPaginationDto } from 'src/post/dto/pagination.dto';
+import { PostResponseInterface } from 'src/post/types/postResponse.interface';
 
 @Controller('posts')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -34,8 +37,13 @@ export class PostController {
   }
 
   @Get()
-  async getAll(): Promise<Array<PostEntity>> {
-    return await this.postService.getAll();
+  async getAll(
+    @Query() query: PostPaginationDto,
+  ): Promise<PostResponseInterface> {
+    const getQueryData = Object.keys(query).length
+      ? query
+      : { limit: 10, offset: 0 };
+    return await this.postService.getAll(getQueryData);
   }
 
   @Get('/:id')
