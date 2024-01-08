@@ -67,15 +67,25 @@ export class PostService {
   async updatePost(
     postId: string,
     updatePostDto: UpdatePostDto,
+    userId: string,
   ): Promise<UpdateResult> {
+    const post = await this.checkPost(userId, postId);
+    return await this.postRepository.update(post._id, updatePostDto);
+  }
+  async deletePost(postId: string, userId: string): Promise<DeleteResult> {
+    const post = await this.checkPost(userId, postId);
+    return await this.postRepository.delete({ _id: post._id });
+  }
+
+  async checkPost(userId: string, postId: string) {
     const post = await this.findOne(postId);
 
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
-    return await this.postRepository.update(post._id, updatePostDto);
-  }
-  async deletePost(postId: string): Promise<DeleteResult> {
-    return await this.postRepository.delete({ _id: postId });
+    if (post.postedBy._id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+    return post;
   }
 }

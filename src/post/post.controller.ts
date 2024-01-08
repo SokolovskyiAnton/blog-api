@@ -55,12 +55,20 @@ export class PostController {
   async update(
     @Param('id') postId: string,
     @Body() updatePostDto: UpdatePostDto,
+    @User('_id') currentUserId: string,
   ): Promise<UpdateResult> {
-    return await this.postService.updatePost(postId, updatePostDto);
+    return await this.postService.updatePost(
+      postId,
+      updatePostDto,
+      currentUserId,
+    );
   }
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async deletePost(@Param('id') postId: string): Promise<DeleteResult> {
-    return await this.postService.deletePost(postId);
+  async deletePost(
+    @Param('id') postId: string,
+    @User('_id') currentUserId: string,
+  ): Promise<DeleteResult> {
+    return await this.postService.deletePost(postId, currentUserId);
   }
 }
