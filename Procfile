@@ -1,2 +1,2 @@
 web: npm run start:prod
-release: echo '' > .env && npm run db:migrate
+release: npm run db:migrate:prod
