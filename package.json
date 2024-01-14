@@ -22,7 +22,7 @@
     "db:drop": "npm run typeorm schema:drop",
     "db:create": "npm run typeorm migration:generate",
     "db:migrate": "npm run typeorm migration:run",
-    "migration:up": "./node_modules/.bin/ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm migration:run -d ./ormconfig.ts"
+    "migration:up": "./node_modules/.bin/ts-node -r ./node_modules/tsconfig-paths/register ./node_modules/.bin/typeorm migration:run -d ./ormconfig.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
