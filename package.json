@@ -22,7 +22,7 @@
     "db:drop": "npm run typeorm schema:drop",
     "db:create": "npm run typeorm migration:generate",
     "db:migrate": "npm run typeorm migration:run",
-    "db:migrate:prod": "npm i tsc && npm i ts-node ./node_modules/typeorm/cli.js migration:run"
+    "db:migrate:prod": "npm i tsc && npm i ts-node ./node_modules/typeorm/cli.js npm run db:migrate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
