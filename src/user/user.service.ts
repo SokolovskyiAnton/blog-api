@@ -27,7 +27,7 @@ export class UserService {
     }
 
     const user = new UserEntity();
-
+    Object.assign(user, createUserDto);
     return await this.userRepository.save(user);
   }
 

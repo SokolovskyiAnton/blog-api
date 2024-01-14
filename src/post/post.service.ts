@@ -38,7 +38,7 @@ export class PostService {
       .leftJoinAndSelect('posts.postedBy', 'postedBy');
     queryBuilder.orderBy('posts.dateCreated', 'DESC');
     let postsCount = await queryBuilder.getCount();
-    console.log(1);
+
     if (query.author) {
       queryBuilder.andWhere('posts.postedBy = :id', {
         id: query.author,
