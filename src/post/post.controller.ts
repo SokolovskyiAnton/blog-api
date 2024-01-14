@@ -39,11 +39,12 @@ export class PostController {
   @Get()
   async getAll(
     @Query() query: PostPaginationDto,
+    @User('_id') currentUserId: string,
   ): Promise<PostResponseInterface> {
     const getQueryData = Object.keys(query).length
       ? query
       : { limit: 10, offset: 0 };
-    return await this.postService.getAll(getQueryData);
+    return await this.postService.getAll(getQueryData, currentUserId);
   }
 
   @Get('/:id')
@@ -70,5 +71,21 @@ export class PostController {
     @User('_id') currentUserId: string,
   ): Promise<DeleteResult> {
     return await this.postService.deletePost(postId, currentUserId);
+  }
+  @Post('/like/:id')
+  @UseGuards(AuthGuard)
+  async setLike(
+    @User('id') currentUserId: string,
+    @Param('id') postId: string,
+  ): Promise<PostEntity> {
+    return await this.postService.setLike(currentUserId, postId);
+  }
+  @Delete('/like/:id')
+  @UseGuards(AuthGuard)
+  async deleteLike(
+    @User('id') currentUserId: string,
+    @Param('id') postId: string,
+  ): Promise<PostEntity> {
+    return await this.postService.deleteLike(currentUserId, postId);
   }
 }

@@ -4,10 +4,11 @@ import { PostController } from 'src/post/post.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SharedModule } from 'src/shared/shared.module';
 import { PostEntity } from 'src/post/post.entity';
+import { UserEntity } from 'src/user/user.entity';
 
 @Module({
   controllers: [PostController],
   providers: [PostService],
-  imports: [TypeOrmModule.forFeature([PostEntity]), SharedModule],
+  imports: [TypeOrmModule.forFeature([PostEntity, UserEntity]), SharedModule],
 })
 export class PostModule {}

@@ -7,18 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { PostModule } from 'src/post/post.module';
 import { AuthMiddleware } from 'src/auth/middlewares/auth.middleware';
+import ormconfig from 'src/ormconfig';
+
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'm7az7525jg6ygibs.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-      port: 3306,
-      username: 'umrq2l8qeyvdrel2',
-      password: 'b5l1se0ejoik6ckr',
-      database: 'wj1kcgjyhc9kq1wv',
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(ormconfig),
     ConfigModule.forRoot({
       isGlobal: true,
     }),

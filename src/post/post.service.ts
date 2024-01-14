@@ -13,6 +13,8 @@ export class PostService {
   constructor(
     @InjectRepository(PostEntity)
     private readonly postRepository: Repository<PostEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -26,7 +28,10 @@ export class PostService {
     return await this.postRepository.save(post);
   }
 
-  async getAll(query: PostPaginationDto): Promise<PostResponseInterface> {
+  async getAll(
+    query: PostPaginationDto,
+    userId: string,
+  ): Promise<PostResponseInterface> {
     const queryBuilder = this.dataSource
       .getRepository(PostEntity)
       .createQueryBuilder('posts')
@@ -48,9 +53,23 @@ export class PostService {
       queryBuilder.offset(query.offset);
     }
 
+    let likesIds: string[] = [];
+
+    if (userId) {
+      const user = await this.userRepository.findOne({
+        where: { _id: userId },
+        relations: ['likeList'],
+      });
+      likesIds = user.likeList.map((p) => p._id);
+    }
+
     const posts = await queryBuilder.getMany();
+    const postsWithLikes = posts.map((post) => {
+      const isLiked = likesIds.includes(post._id);
+      return { ...post, isLiked };
+    });
     return {
-      posts,
+      posts: postsWithLikes,
       pagination: {
         total: postsCount,
         limit: query.limit,
@@ -87,5 +106,47 @@ export class PostService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
     return post;
+  }
+
+  async setLike(userId: string, postId: string): Promise<PostEntity> {
+    const { post, user, isNotFavorited } = await this.getLikeInfo(
+      postId,
+      userId,
+    );
+    if (isNotFavorited) {
+      user.likeList.push(post);
+      post.likes++;
+      await this.userRepository.save(user);
+      await this.postRepository.save(post);
+    }
+    return post;
+  }
+
+  async deleteLike(userId: string, postId: string): Promise<PostEntity> {
+    const { post, user, articleIndex } = await this.getLikeInfo(postId, userId);
+    if (articleIndex >= 0) {
+      user.likeList.splice(articleIndex, 1);
+      post.likes--;
+      await this.userRepository.save(user);
+      await this.postRepository.save(post);
+    }
+    return post;
+  }
+
+  async getLikeInfo(postId: string, userId: string) {
+    const post = await this.findOne(postId);
+    const user = await this.userRepository.findOne({
+      where: { _id: userId },
+      relations: ['likeList'],
+    });
+    const isNotFavorited =
+      user.likeList.findIndex((p) => p._id === post._id) === -1;
+    const articleIndex = user.likeList.findIndex((p) => p._id === post._id);
+    return {
+      post,
+      user,
+      isNotFavorited,
+      articleIndex,
+    };
   }
 }

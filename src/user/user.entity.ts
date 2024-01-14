@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
+  JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { PostEntity } from 'src/post/post.entity';
@@ -18,16 +20,16 @@ export class UserEntity {
   firstName: string;
   @Column()
   lastName: string;
-  @Column()
+  @Column({ nullable: true })
   nickname: string;
   @Column({ unique: true })
   email: string;
   @Exclude()
   @Column()
   password: string;
-  @Column()
+  @Column({ nullable: true })
   profession: string;
-  @Column({ length: 1000 })
+  @Column({ length: 1000, nullable: true })
   skills: string;
   @CreateDateColumn()
   dateCreated: Date;
@@ -39,4 +41,7 @@ export class UserEntity {
   }
   @OneToMany(() => PostEntity, (post) => post.postedBy)
   posts: Array<PostEntity>;
+  @ManyToMany(() => PostEntity)
+  @JoinTable()
+  likeList: Array<PostEntity>;
 }

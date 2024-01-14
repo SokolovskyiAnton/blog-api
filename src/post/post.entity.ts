@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from 'src/user/user.entity';
-
 @Entity('posts')
 export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -21,8 +20,8 @@ export class PostEntity {
   dateCreated: Date;
   @Column({ nullable: true })
   image: string;
-  @Column('simple-array', { nullable: true })
-  likes: string[];
+  @Column({ default: 0 })
+  likes: number;
   @ManyToOne(() => UserEntity, (user) => user.posts)
   postedBy: UserEntity;
 }
