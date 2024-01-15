@@ -10,6 +10,8 @@ import {
   ClassSerializerInterceptor,
   UseGuards,
   Query,
+  Put,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostService } from 'src/post/post.service';
 
@@ -22,6 +24,7 @@ import { UpdatePostDto } from 'src/post/dto/updatePost.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { PostPaginationDto } from 'src/post/dto/pagination.dto';
 import { PostResponseInterface } from 'src/post/types/postResponse.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -87,5 +90,14 @@ export class PostController {
     @Param('id') postId: string,
   ): Promise<PostEntity> {
     return await this.postService.deleteLike(currentUserId, postId);
+  }
+  @Put('/upload/:id')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadPostImage(
+    @Param('id') postId: string,
+    @UploadedFile() file: any,
+  ): Promise<UpdateResult> {
+    return await this.postService.uploadPostImage(postId, file);
   }
 }

@@ -7,6 +7,7 @@ import { UserEntity } from 'src/user/user.entity';
 import { UpdatePostDto } from 'src/post/dto/updatePost.dto';
 import { PostPaginationDto } from 'src/post/dto/pagination.dto';
 import { PostResponseInterface } from 'src/post/types/postResponse.interface';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class PostService {
@@ -16,6 +17,7 @@ export class PostService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     private readonly dataSource: DataSource,
+    private readonly fileService: FileService,
   ) {}
 
   async createPost(
@@ -148,5 +150,15 @@ export class PostService {
       isNotFavorited,
       articleIndex,
     };
+  }
+
+  async uploadPostImage(postId: string, file: any): Promise<UpdateResult> {
+    const post = await this.findOne(postId);
+
+    const response = await this.fileService.save(file);
+    const payload = {
+      image: response.url,
+    };
+    return await this.postRepository.update(post._id, payload);
   }
 }
