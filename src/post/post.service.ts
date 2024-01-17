@@ -151,19 +151,4 @@ export class PostService {
       articleIndex,
     };
   }
-
-  async uploadPostImage(postId: string, file: any): Promise<UpdateResult> {
-    const post = await this.findOne(postId);
-
-    if (!post) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    }
-
-    const response = await this.fileService.save(file);
-    const payload = {
-      image: response.url,
-    };
-
-    return await this.postRepository.update(post._id, payload);
-  }
 }

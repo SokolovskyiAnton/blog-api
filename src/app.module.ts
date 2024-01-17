@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PostModule } from 'src/post/post.module';
 import { AuthMiddleware } from 'src/auth/middlewares/auth.middleware';
 import ormconfig from 'src/ormconfig';
+import { FileModule } from 'src/file/file.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import ormconfig from 'src/ormconfig';
     AuthModule,
     UserModule,
     PostModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -91,13 +91,4 @@ export class PostController {
   ): Promise<PostEntity> {
     return await this.postService.deleteLike(currentUserId, postId);
   }
-  @Put('/upload/:id')
-  @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadPostImage(
-    @Param('id') postId: string,
-    @UploadedFile() file: any,
-  ): Promise<UpdateResult> {
-    return await this.postService.uploadPostImage(postId, file);
-  }
 }

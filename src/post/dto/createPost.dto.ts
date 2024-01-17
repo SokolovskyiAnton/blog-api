@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class CreatePostDto {
   @MinLength(3)
@@ -13,4 +13,6 @@ export class CreatePostDto {
   @MaxLength(100)
   @IsNotEmpty()
   description: string;
+  @IsOptional()
+  image: string;
 }

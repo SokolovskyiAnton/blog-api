@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, UploadedFile } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
+import { FileResponseInterface } from 'src/file/types/fileResponse.interface';
 @Injectable()
 export class FileService {
   constructor(private configService: ConfigService) {}
-  async save(@UploadedFile() file) {
+  async save(@UploadedFile() file): Promise<FileResponseInterface> {
     const s3 = new S3({
       credentials: {
         accessKeyId: this.configService.get<string>('AWS_ACCESS_ID'),
@@ -26,7 +27,6 @@ export class FileService {
       const uploadedFile = await s3.upload(params).promise();
       return { url: uploadedFile.Location, key: uploadedFile.Key };
     } catch (error) {
-      console.error(error, '1212');
       throw new BadRequestException('Bad request');
     }
   }
