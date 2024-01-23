@@ -9,6 +9,7 @@ import { PostModule } from 'src/post/post.module';
 import { AuthMiddleware } from 'src/auth/middlewares/auth.middleware';
 import ormconfig from 'src/ormconfig';
 import { FileModule } from 'src/file/file.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FileModule } from 'src/file/file.module';
     UserModule,
     PostModule,
     FileModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

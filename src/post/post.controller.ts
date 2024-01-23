@@ -10,8 +10,6 @@ import {
   ClassSerializerInterceptor,
   UseGuards,
   Query,
-  Put,
-  UploadedFile,
 } from '@nestjs/common';
 import { PostService } from 'src/post/post.service';
 
@@ -56,7 +54,7 @@ export class PostController {
   }
   @Patch(':id')
   @UseGuards(AuthGuard)
-  async update(
+  async updatePost(
     @Param('id') postId: string,
     @Body() updatePostDto: UpdatePostDto,
     @User('_id') currentUserId: string,
