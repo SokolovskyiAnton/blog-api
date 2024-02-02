@@ -119,6 +119,7 @@ export class PostService {
       await this.userRepository.save(user);
       await this.postRepository.save(post);
     }
+
     return post;
   }
 
@@ -130,6 +131,7 @@ export class PostService {
       await this.userRepository.save(user);
       await this.postRepository.save(post);
     }
+
     return post;
   }
 

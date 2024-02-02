@@ -22,7 +22,6 @@ import { UpdatePostDto } from 'src/post/dto/updatePost.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { PostPaginationDto } from 'src/post/dto/pagination.dto';
 import { PostResponseInterface } from 'src/post/types/postResponse.interface';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 @UseInterceptors(ClassSerializerInterceptor)

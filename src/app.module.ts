@@ -10,7 +10,6 @@ import { AuthMiddleware } from 'src/auth/middlewares/auth.middleware';
 import ormconfig from 'src/ormconfig';
 import { FileModule } from 'src/file/file.module';
 import { CommentModule } from './comment/comment.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormconfig),
