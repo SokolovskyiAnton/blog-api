@@ -75,7 +75,7 @@ export class PostController {
   @Post('/like/:id')
   @UseGuards(AuthGuard)
   async setLike(
-    @User('id') currentUserId: string,
+    @User('_id') currentUserId: string,
     @Param('id') postId: string,
   ): Promise<PostEntity> {
     return await this.postService.setLike(currentUserId, postId);
@@ -83,7 +83,7 @@ export class PostController {
   @Delete('/like/:id')
   @UseGuards(AuthGuard)
   async deleteLike(
-    @User('id') currentUserId: string,
+    @User('_id') currentUserId: string,
     @Param('id') postId: string,
   ): Promise<PostEntity> {
     return await this.postService.deleteLike(currentUserId, postId);
